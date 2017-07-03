@@ -24,6 +24,13 @@ public class NetworkSampleManager : MonoBehaviour {
     public void handler_SC_LOG_IN(LOBBY.SC_LOG_IN read)
     {
         Debug.Log("recv handler_SC_LOG_IN");
+        Debug.Log(read.Result);
+
+        LOBBY.CS_LOG_IN Send = new LOBBY.CS_LOG_IN();
+        Send.Id = "아잉오";
+        Send.Password = "12345";
+
+        ProtobufManager.Instance().Send(opcode.CS_LOG_IN, Send);
     }
 
     public void Awake()
@@ -38,7 +45,6 @@ public class NetworkSampleManager : MonoBehaviour {
 
     void Start ()
     {
-       
         ProtobufManager.Instance().Connect("127.0.0.1", 3000, onConnect, onDisconnect);
         RegisterPacketHandler();
     }

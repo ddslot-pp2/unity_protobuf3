@@ -31,23 +31,21 @@ public class ProtobufHandler //: MonoBehaviour
     {
         var Read = Deserializer_[opcode](Protobuf);
 
-        //Handlers_[opcode](Read);
+        Handlers_[opcode](Read);
     }
 
     public void SetDeserializer()
     {
         // 여기에 일단 등록
-        Deserializer_[(Int16)opcode.SC_LOG_IN] = (byte[] Buf) =>
+        Deserializer_[OpcodeToInt16(opcode.SC_LOG_IN)] = (byte[] Buf) =>
         {
             var Protobuf = LOBBY.SC_LOG_IN.Parser.ParseFrom(Buf);
             return Protobuf;
         };   
     }
 
-    /*
-    public void SetHandler(Int16 Opcode, Action<IMessage> Handler)
+    private Int16 OpcodeToInt16(Enum opcode)
     {
-        HandlerCallback_[Opcode] = Handler;
+        return Convert.ToInt16(opcode);
     }
-    */
 }

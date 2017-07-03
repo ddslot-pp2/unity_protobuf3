@@ -49,23 +49,20 @@ public class ProtobufManager// : MonoBehaviour
         {
             var Buf = RecvQueue_.Dequeue();
 
-            byte[] OpcodeBuf = Buf.GetBuffer();
+            byte[] BufByte = Buf.GetBuffer();
 
-            Int16 Opcode = BitConverter.ToInt16(OpcodeBuf, 0);
+            Int16 Opcode = BitConverter.ToInt16(BufByte, 0);
 
-            byte[] ProtoBuf = null;
+            // 업데이트 필요
+            var BodyStream = new MemoryStream();
+            
+            var CopySize = Buf.Length - sizeof(Int16);
 
-            //Buf.
+            BodyStream.Write(BufByte, sizeof(Int16), (int)CopySize);
 
-            Handler_.Handle(Opcode, ProtoBuf);
-            /*
-            var read = LOBBY.SC_LOG_IN.Parser.ParseFrom(Buf);
-            if (processor_SC_LOG_IN != null)
-            {
-                processor_SC_LOG_IN(read);
-            }
-            */
-            //LOBBY.SC_LOG_IN.Parser.ParseFrom(Buf);
+            byte[] Packetbuf = BodyStream.ToArray();
+
+            Handler_.Handle(Opcode, Packetbuf);
         }
     }
 
