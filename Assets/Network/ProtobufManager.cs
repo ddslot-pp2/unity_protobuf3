@@ -5,15 +5,21 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class ProtobufManager
+public class ProtobufManager// : MonoBehaviour
 {
 
     public static ProtobufManager Instance_ = null;
     private Session Session_ = null;
+    public Queue<MemoryStream> RecvQueue_ = null;
+
+    public ProtobufHandler Handler_ = null;
 
     void Init()
     {
         Session_ = new Session();
+        Handler_ = new ProtobufHandler();
+        Handler_.Init();
+        RecvQueue_ = new Queue<MemoryStream>();
     }
 
     public static ProtobufManager Instance()
@@ -32,19 +38,33 @@ public class ProtobufManager
         Session_.Connect(Host, Port, ConnectCallback, DisconnectCallback, onRecvCallback);
     }
 
-    public void onRecvCallback(MemoryStream buf)
+    public void onRecvCallback(MemoryStream Buf)
     {
-        /*
-        Debug.Log("onRecvCallback called");
-        Debug.Log("recv length: " + buf.Length);
+        RecvQueue_.Enqueue(Buf);
+    }
 
-        LOBBY.CS_LOG_IN send = new LOBBY.CS_LOG_IN();
-        send.Id = "으으앙";
-        send.Password = "12345";
+    public void ProcessingPacket()
+    {
+        while (RecvQueue_.Count > 0)
+        {
+            var Buf = RecvQueue_.Dequeue();
+            Int16 Opcode = BitConverter.ToInt16(Buf.GetBuffer(), 0);
 
-        ProtobufManager.Instance().Send(opcode.CS_LOG_IN, send);
-        */
-        
+            // 버퍼를 sizeof(Int16) 이동
+            Buf.Seek(sizeof(Int16), 0);
+
+            byte[] ProtobufBuf = Buf.GetBuffer();
+
+            Handler_.Handle(Opcode, ProtobufBuf);
+            /*
+            var read = LOBBY.SC_LOG_IN.Parser.ParseFrom(Buf);
+            if (processor_SC_LOG_IN != null)
+            {
+                processor_SC_LOG_IN(read);
+            }
+            */
+            //LOBBY.SC_LOG_IN.Parser.ParseFrom(Buf);
+        }
     }
 
     public void Send(Enum Opcode, IMessage protobuf)
@@ -80,5 +100,20 @@ public class ProtobufManager
             Session_ = null;
         }
     }
-  
+
+    public ProtobufHandler Handler()
+    {
+        if (Handler_ != null)
+        {
+            return Handler_;
+        }
+
+        return null;
+    }
+
+    public void SetHandler(Enum Opcode, Action<IMessage> callback)
+    {
+        Handler_.SetHandler(Convert.ToInt16(Opcode), callback);
+    }
+
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Google.Protobuf;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
@@ -20,14 +21,33 @@ public class NetworkSampleManager : MonoBehaviour {
         Debug.Log("ErrorCode: " + ErrorCode);
     }
 
+    public void Handler_SC_LOG_IN(LOBBY.SC_LOG_IN read)
+    {
+        
+    }
+
     public void Awake()
     {
         ProtobufManager.Instance().Connect("127.0.0.1", 3000, onConnect, onDisconnect);
+        //ProtobufManager.Instance().Handler().SetHandler(20, Handler_SC_LOG_IN);
     }
+
+    public class A
+    {
+        public virtual void Foo()
+        {
+
+        }
+    }
+
+    public delegate void custom_callback(A packet);
+
+
 
     void Start ()
     {
-        //ProtobufManager.Instance().Connect("127.0.0.1", 3000, onConnect, onDisconnect, onRecvCallback);
+       
+        ProtobufManager.Instance().Connect("127.0.0.1", 3000, onConnect, onDisconnect);
     }
 	
 	// Update is called once per frame
