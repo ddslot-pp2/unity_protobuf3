@@ -43,19 +43,21 @@ public class ProtobufManager// : MonoBehaviour
         RecvQueue_.Enqueue(Buf);
     }
 
-    public void ProcessingPacket()
+    public void ProcessPacket()
     {
         while (RecvQueue_.Count > 0)
         {
             var Buf = RecvQueue_.Dequeue();
-            Int16 Opcode = BitConverter.ToInt16(Buf.GetBuffer(), 0);
 
-            // 버퍼를 sizeof(Int16) 이동
-            Buf.Seek(sizeof(Int16), 0);
+            byte[] OpcodeBuf = Buf.GetBuffer();
 
-            byte[] ProtobufBuf = Buf.GetBuffer();
+            Int16 Opcode = BitConverter.ToInt16(OpcodeBuf, 0);
 
-            Handler_.Handle(Opcode, ProtobufBuf);
+            byte[] ProtoBuf = null;
+
+            //Buf.
+
+            Handler_.Handle(Opcode, ProtoBuf);
             /*
             var read = LOBBY.SC_LOG_IN.Parser.ParseFrom(Buf);
             if (processor_SC_LOG_IN != null)
@@ -111,9 +113,9 @@ public class ProtobufManager// : MonoBehaviour
         return null;
     }
 
-    public void SetHandler(Enum Opcode, Action<IMessage> callback)
+    public void SetHandler<T>(Enum opcode, Action<T> action)
     {
-        //Handler_.SetHandler(Convert.ToInt16(Opcode), callback);
+        Handler_.SetHandler<T>(Convert.ToInt16(opcode), action);
     }
 
 }

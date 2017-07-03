@@ -23,32 +23,32 @@ public class NetworkSampleManager : MonoBehaviour {
 
     public void handler_SC_LOG_IN(LOBBY.SC_LOG_IN read)
     {
-       
+        Debug.Log("유부남 불륜");
     }
 
     public void Awake()
     {
-        //ProtobufManager.Instance().Handler().Handlers_[200] = handler_SC_LOG_IN;
-        ProtobufManager.Instance().Handler().SetHandler<LOBBY.SC_LOG_IN>(200, handler_SC_LOG_IN);
-        //ProtobufManager.Instance().Handler().SetHandler(200, handler_SC_LOG_IN);
     }
 
     public void RegisterPacketHandler()
     {
-       
+        //ProtobufManager.Instance().Handler().SetHandler<LOBBY.SC_LOG_IN>(200, handler_SC_LOG_IN);
+        ProtobufManager.Instance().SetHandler<LOBBY.SC_LOG_IN>(opcode.SC_LOG_IN, handler_SC_LOG_IN);
     }
 
     void Start ()
     {
        
         ProtobufManager.Instance().Connect("127.0.0.1", 3000, onConnect, onDisconnect);
+        RegisterPacketHandler();
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-		
-	}
+        ProtobufManager.Instance().ProcessPacket();
+
+    }
 
     void OnDestroy()
     {

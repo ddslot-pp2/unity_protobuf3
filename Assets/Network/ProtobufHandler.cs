@@ -17,32 +17,9 @@ public class ProtobufHandler //: MonoBehaviour
     public void Init()
     {
         Deserializer_ = new Dictionary<Int16, DeserializeCallback>();
+        Handlers_     = new Dictionary<Int16, Action<IMessage>>();
+
         SetDeserializer();
-
-        /*
-        var actions = new Dictionary<Int16, Action<IMessage>>
-    {
-
-        { 200, i => handle_SC_LOG_IN((LOBBY.SC_LOG_IN)i) }
-
-    };
-
-        Handlers_[200] = IMessage => handle_SC_LOG_IN((LOBBY.SC_LOG_IN)IMessage);
-        */
-
-
-
-        //var action = new Action<LOBBY.SC_LOG_IN>(handle_SC_LOG_IN);
-        //Handlers_[200] = (Action<IMessage>)action;
-        /*
-        Handlers_ = new Dictionary<Int16, Handler>();
-        Handlers_[20] = (LOBBY.SC_LOG_IN read) =>
-        {
-
-        };
-        */
-
-
     }
 
     public void SetHandler<T>(Int16 opcode, Action<T> action)
@@ -50,11 +27,11 @@ public class ProtobufHandler //: MonoBehaviour
         Handlers_[opcode] = IMessage => action((T)IMessage);
     }
 
-    public void Handle(Int16 Opcode, byte[] Protobuf)
+    public void Handle(Int16 opcode, byte[] Protobuf)
     {
-        var Read = Deserializer_[Opcode](Protobuf);
-       
+        var Read = Deserializer_[opcode](Protobuf);
 
+        //Handlers_[opcode](Read);
     }
 
     public void SetDeserializer()
