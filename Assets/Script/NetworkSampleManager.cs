@@ -21,28 +21,22 @@ public class NetworkSampleManager : MonoBehaviour {
         Debug.Log("ErrorCode: " + ErrorCode);
     }
 
-    public void Handler_SC_LOG_IN(LOBBY.SC_LOG_IN read)
+    public void handler_SC_LOG_IN(LOBBY.SC_LOG_IN read)
     {
-        
+       
     }
 
     public void Awake()
     {
-        ProtobufManager.Instance().Connect("127.0.0.1", 3000, onConnect, onDisconnect);
-        //ProtobufManager.Instance().Handler().SetHandler(20, Handler_SC_LOG_IN);
+        //ProtobufManager.Instance().Handler().Handlers_[200] = handler_SC_LOG_IN;
+        ProtobufManager.Instance().Handler().SetHandler<LOBBY.SC_LOG_IN>(200, handler_SC_LOG_IN);
+        //ProtobufManager.Instance().Handler().SetHandler(200, handler_SC_LOG_IN);
     }
 
-    public class A
+    public void RegisterPacketHandler()
     {
-        public virtual void Foo()
-        {
-
-        }
+       
     }
-
-    public delegate void custom_callback(A packet);
-
-
 
     void Start ()
     {

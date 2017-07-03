@@ -113,7 +113,7 @@ public class ProtobufManager// : MonoBehaviour
 
     public void SetHandler(Enum Opcode, Action<IMessage> callback)
     {
-        Handler_.SetHandler(Convert.ToInt16(Opcode), callback);
+        //Handler_.SetHandler(Convert.ToInt16(Opcode), callback);
     }
 
 }
