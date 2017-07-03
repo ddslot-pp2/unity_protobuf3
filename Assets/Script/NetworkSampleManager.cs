@@ -23,7 +23,7 @@ public class NetworkSampleManager : MonoBehaviour {
 
     public void handler_SC_LOG_IN(LOBBY.SC_LOG_IN read)
     {
-        Debug.Log("유부남 불륜");
+        Debug.Log("recv handler_SC_LOG_IN");
     }
 
     public void Awake()
