@@ -114,11 +114,11 @@ public class Session {
         {
             SocketError SE;
             int RecvLength = Socket_.EndReceive(ar, out SE);
-            Debug.Log("OnReadHeader RecvLength: " + RecvLength);
+            //Debug.Log("OnReadHeader RecvLength: " + RecvLength);
             if (SE == SocketError.Success && RecvLength > 0 && RecvLength <= sizeof(Int16))
             {
                 Header_ = BitConverter.ToInt16(HeaderBuffer_, 0);
-                Debug.Log("몸통 사이즈: " + Header_);
+                //Debug.Log("몸통 사이즈: " + Header_);
                 DoReadBody();
             }
             else
@@ -155,7 +155,7 @@ public class Session {
             int RecvLength = Socket_.EndReceive(ar, out SE);
             if (SE == SocketError.Success && RecvLength > 0 && RecvLength < MaxBufferSize)
             {
-                Debug.Log("몸통 받은 사이즈: " + RecvLength);
+                //Debug.Log("몸통 받은 사이즈: " + RecvLength);
                 var Buf = new MemoryStream();
                 Buf.Write(BodyBuffer_, 0, RecvLength);
 
@@ -208,8 +208,8 @@ public class Session {
 
             int SendByte = Sock.EndSend(ar);
 
-            Debug.Log("보낸 바이트 숫자: " + SendByte);
-            Debug.Log("보낸는 큐 사이즈: " + SendQueue_.Count);
+            //Debug.Log("보낸 바이트 숫자: " + SendByte);
+            //Debug.Log("보낸는 큐 사이즈: " + SendQueue_.Count);
 
             if (SendQueue_.Count > 0)
             {
@@ -220,8 +220,8 @@ public class Session {
         catch (Exception e)
         {
             SendQueue_.Clear();
-            Debug.Log(e);
-            Debug.Log("보내기 실패");
+            //Debug.Log(e);
+            //Debug.Log("보내기 실패");
             onDisconnectCallback_(SocketError.SocketError);
         }
     }

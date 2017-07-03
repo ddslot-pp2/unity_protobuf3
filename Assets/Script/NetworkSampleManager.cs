@@ -26,7 +26,18 @@ public class NetworkSampleManager : MonoBehaviour {
         Debug.Log("recv handler_SC_LOG_IN");
         Debug.Log(read.Result);
 
-        LOBBY.CS_LOG_IN Send = new LOBBY.CS_LOG_IN();
+        var Send = new GAME.CS_PING();
+        Send.Timestamp = 200;
+
+        ProtobufManager.Instance().Send(opcode.CS_PING, Send);
+    }
+
+    public void handler_SC_PING(GAME.SC_PING read)
+    {
+        Debug.Log("recv handler_SC_PING");
+        Debug.Log(read.Timestamp);
+
+        var Send = new LOBBY.CS_LOG_IN();
         Send.Id = "아잉오";
         Send.Password = "12345";
 
@@ -39,8 +50,8 @@ public class NetworkSampleManager : MonoBehaviour {
 
     public void RegisterPacketHandler()
     {
-        //ProtobufManager.Instance().Handler().SetHandler<LOBBY.SC_LOG_IN>(200, handler_SC_LOG_IN);
         ProtobufManager.Instance().SetHandler<LOBBY.SC_LOG_IN>(opcode.SC_LOG_IN, handler_SC_LOG_IN);
+        ProtobufManager.Instance().SetHandler<GAME.SC_PING>(opcode.SC_PING, handler_SC_PING);
     }
 
     void Start ()

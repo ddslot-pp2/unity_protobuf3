@@ -41,7 +41,13 @@ public class ProtobufHandler //: MonoBehaviour
         {
             var Protobuf = LOBBY.SC_LOG_IN.Parser.ParseFrom(Buf);
             return Protobuf;
-        };   
+        };
+
+        Deserializer_[OpcodeToInt16(opcode.SC_PING)] = (byte[] Buf) =>
+        {
+            var Protobuf = GAME.SC_PING.Parser.ParseFrom(Buf);
+            return Protobuf;
+        };
     }
 
     private Int16 OpcodeToInt16(Enum opcode)
