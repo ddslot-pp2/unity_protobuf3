@@ -8,19 +8,20 @@ using System;
 
 public class NetworkSampleManager : MonoBehaviour {
 
-    //Session session_;
-
+    // 접속 완료 후 콜백
     public void onConnect()
     {
         Debug.Log("OnConnected called\n");
     }
 
+    // 접속 종료시 콜백
     public void onDisconnect(SocketError ErrorCode)
     {
         Debug.Log("OnDisonnected called");
         Debug.Log("ErrorCode: " + ErrorCode);
     }
 
+    // 이번 Scene에서 사용할 패킷 관련 핸들러
     public void handler_SC_LOG_IN(LOBBY.SC_LOG_IN read)
     {
         Debug.Log("recv handler_SC_LOG_IN");
@@ -50,19 +51,21 @@ public class NetworkSampleManager : MonoBehaviour {
 
     public void RegisterPacketHandler()
     {
+        // 이번 패킷에 사용할 패킷관련 핸들러를 지정
         ProtobufManager.Instance().SetHandler<LOBBY.SC_LOG_IN>(opcode.SC_LOG_IN, handler_SC_LOG_IN);
         ProtobufManager.Instance().SetHandler<GAME.SC_PING>(opcode.SC_PING, handler_SC_PING);
     }
 
     void Start ()
     {
-        ProtobufManager.Instance().Connect("127.0.0.1", 3000, onConnect, onDisconnect);
         RegisterPacketHandler();
+        ProtobufManager.Instance().Connect("127.0.0.1", 3000, onConnect, onDisconnect);
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        // 업데이트 할때마다 패킷을 처리해 핸들러를 호출
         ProtobufManager.Instance().ProcessPacket();
 
     }

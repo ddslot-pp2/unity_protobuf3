@@ -57,7 +57,6 @@ public class Session {
         SocketAsyncEventArgs EventArgs = new SocketAsyncEventArgs();
         EventArgs.Completed += onConnect;
         EventArgs.RemoteEndPoint = this.End_point_;
-        //event_arg.UserToken = tcpSession;
 
         bool pending = Socket_.ConnectAsync(EventArgs);
         if (!pending)
@@ -86,7 +85,6 @@ public class Session {
         {
             onConnectCallback_();
             DoReadHeader();
-            //do_read_header(socket_);
         }
         else
         {
@@ -114,11 +112,10 @@ public class Session {
         {
             SocketError SE;
             int RecvLength = Socket_.EndReceive(ar, out SE);
-            //Debug.Log("OnReadHeader RecvLength: " + RecvLength);
+            
             if (SE == SocketError.Success && RecvLength > 0 && RecvLength <= sizeof(Int16))
             {
                 Header_ = BitConverter.ToInt16(HeaderBuffer_, 0);
-                //Debug.Log("몸통 사이즈: " + Header_);
                 DoReadBody();
             }
             else
@@ -207,10 +204,6 @@ public class Session {
             Socket Sock = (Socket)ar.AsyncState;
 
             int SendByte = Sock.EndSend(ar);
-
-            //Debug.Log("보낸 바이트 숫자: " + SendByte);
-            //Debug.Log("보낸는 큐 사이즈: " + SendQueue_.Count);
-
             if (SendQueue_.Count > 0)
             {
                 DoSend();
@@ -220,8 +213,6 @@ public class Session {
         catch (Exception e)
         {
             SendQueue_.Clear();
-            //Debug.Log(e);
-            //Debug.Log("보내기 실패");
             onDisconnectCallback_(SocketError.SocketError);
         }
     }
