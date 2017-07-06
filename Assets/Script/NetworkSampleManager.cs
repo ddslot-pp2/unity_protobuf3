@@ -51,7 +51,7 @@ public class NetworkSampleManager : MonoBehaviour {
 
     public void RegisterPacketHandler()
     {
-        // 이번 패킷에 사용할 패킷관련 핸들러를 지정
+        // 이번 Scene에 사용할 패킷관련 핸들러를 지정
         ProtobufManager.Instance().SetHandler<LOBBY.SC_LOG_IN>(opcode.SC_LOG_IN, handler_SC_LOG_IN);
         ProtobufManager.Instance().SetHandler<GAME.SC_PING>(opcode.SC_PING, handler_SC_PING);
     }
